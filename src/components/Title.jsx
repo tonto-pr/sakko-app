@@ -4,7 +4,7 @@ export default class Title extends Component {
   render() {
     return (
       <h1>
-        Sakko.app
+        Sakko.app rebuilt
       </h1>
     );
   }
