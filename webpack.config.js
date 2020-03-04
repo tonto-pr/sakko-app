@@ -2,11 +2,12 @@ const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/index.jsx",
+    entry: "./src/index.tsx",
+    devtool: "source-map",
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: "babel-loader"
@@ -19,11 +20,16 @@ module.exports = {
                         loader: "html-loader"
                     }
                 ]
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
             }
         ]
     },
     resolve: {
-        extensions: ['*', '.js', '.jsx']
+        extensions: ['*', '.js', '.jsx', '.ts', 'tsx']
     },
     output: {
         path: __dirname + '/dist',
