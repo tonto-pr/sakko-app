@@ -33,14 +33,14 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist',
-        publicPath: '/dist',
+        publicPath: '/dist/',
         filename: 'bundle.js'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebPackPlugin({
             template: "./src/index.html",
-            filename: "./index.html"
+            filename: "index.html"
         })
     ],
     devServer: {
