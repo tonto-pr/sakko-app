@@ -1,9 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Title from './components/Title.tsx';
+import TitlePage from './components/TitlePage.tsx';
+
+import "./css/styles.scss"
 
 ReactDOM.render(
-  <Title message="Sakko.app" />,
+  <TitlePage message="sakko.app" />,
   document.getElementById('app')
 );
 
