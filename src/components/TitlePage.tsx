@@ -19,7 +19,8 @@ const Title = styled.div`
   text-align: center;
   line-height: 100vh;
   color: ${variables.lightBeige};
-  font-family: 'Aldrich';
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
 `;
 
 export default class TitlePage extends Component<TitleProps, {}> {
