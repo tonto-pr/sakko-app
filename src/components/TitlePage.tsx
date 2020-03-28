@@ -29,7 +29,7 @@ export default class TitlePage extends Component<TitleProps, {}> {
     const { message2 } = this.props;
     return (
       <RootContainer>
-        <Title>{message}</Title>
+        <Title>{message}</Title> <br />
         <Title>{message2}</Title>
       </RootContainer>
     );
