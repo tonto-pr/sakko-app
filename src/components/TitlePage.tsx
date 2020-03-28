@@ -26,9 +26,11 @@ const Title = styled.div`
 export default class TitlePage extends Component<TitleProps, {}> {
   render() {
     const { message } = this.props;
+    const { message2 } = this.props;
     return (
       <RootContainer>
         <Title>{message}</Title>
+        <Title>{message2}</Title>
       </RootContainer>
     );
   }
