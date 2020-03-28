@@ -5,8 +5,8 @@ import TitlePage from './components/TitlePage.tsx';
 import "./css/styles.scss"
 
 ReactDOM.render(
-  <TitlePage message="sakko.app is coming
-  stay tuned" />,
+  <TitlePage message="sakko.app is coming" />,
+  <TitlePage message2="stay tuned" />,
   document.getElementById('app')
 );
 
