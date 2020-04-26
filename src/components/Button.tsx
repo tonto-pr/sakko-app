@@ -6,7 +6,7 @@ const StyledButton = styled.button`
   outline: none;
   width: 100px;
   height: 30px;
-  margin: 5px 0 0 5px;
+  margin: 5px 5px 5px 5px;
   border-radius: 10px;
   font-size: 1em;
   color: ${variables.darkGray};
@@ -17,8 +17,9 @@ const StyledButton = styled.button`
 `;
 
 export type ButtonProps = {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: () => void;
   id: string;
+  className?: string;
   children: React.ReactNode;
 };
 
@@ -26,7 +27,11 @@ export const Button: React.FunctionComponent<ButtonProps> = (
   props: ButtonProps
 ) => {
   return (
-    <StyledButton id={props.id} onClick={props.onClick}>
+    <StyledButton
+      className={props.className}
+      id={props.id}
+      onClick={props.onClick}
+    >
       {props.children}
     </StyledButton>
   );

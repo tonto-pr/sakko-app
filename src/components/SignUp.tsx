@@ -3,8 +3,6 @@ import { useState } from "react";
 
 import { Input } from "./Input";
 import { Button } from "./Button";
-import { Modal } from "./Modal";
-import { SignUp } from "./SignUp";
 
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
@@ -13,69 +11,62 @@ import * as types from "../../generated/common.types.generated";
 
 import styled from "styled-components";
 
-const StyledLogin = styled.div`
+const StyledSignUp = styled.div`
   width: 400px;
   padding: 0.5em;
   margin: auto;
   text-align: center;
 `;
 
-export const Login: React.FunctionComponent = () => {
-  const [userLogin, setUserLogin] = useState<types.ShapeOfUserLogin>({
+export const SignUp: React.FunctionComponent = () => {
+  const [signUpData, setSignUpData] = useState<types.ShapeOfPlainUser>({
     username: "",
+    email: "",
     password: "",
   });
-  const [showModal, setShowModal] = useState<boolean>(false);
 
   const apiClient = api.client(axiosAdapter.bind);
 
   function handleUserLoginChange(
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
-    setUserLogin({
-      ...userLogin,
+    setSignUpData({
+      ...signUpData,
       [event.target.id]: event.target.value,
     });
   }
 
-  function handleLoginButtonClick(): void {
-    apiClient.login.post({
-      body: runtime.client.json(userLogin),
+  async function handleSignUpClick(): void {
+    const response = await apiClient.user.post({
+      body: runtime.client.json(signUpData),
     });
   }
 
-  function handleSignUpClick(): void {
-    setShowModal(true);
-  }
-
-  function onCloseModalHandler(): void {
-    setShowModal(false);
-  }
-
   return (
-    <StyledLogin>
-      <Modal show={showModal} onCloseModal={onCloseModalHandler}>
-        <SignUp />
-      </Modal>
+    <StyledSignUp>
       <Input
         id="username"
         placeholder="Username"
-        value={userLogin.username}
+        value={signUpData.username}
         onChange={handleUserLoginChange}
       />
       <Input
         id="password"
         placeholder="Password"
-        value={userLogin.password}
+        value={signUpData.password}
         onChange={handleUserLoginChange}
         type="password"
       />
-      <Button id="login" onClick={handleLoginButtonClick}>
-        Login
-      </Button>
-      <Button id="signup" onClick={handleSignUpClick}>
+      <Input
+        id="email"
+        placeholder="Email"
+        value={signUpData.email}
+        onChange={handleUserLoginChange}
+        type="email"
+      />
+      <Button id="signupmodalbutton" onClick={handleSignUpClick}>
         Sign Up
       </Button>
-    </StyledLogin>
+    </StyledSignUp>
   );
 };
