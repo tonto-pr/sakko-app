@@ -5,7 +5,7 @@ import variables from "../css/palette";
 const StyledInput = styled.input`
   outline: none;
   padding: 10px;
-  margin: 5px 0 0 5px;
+  margin: 5px 5px 5px 5px;
   color: ${variables.darkGray};
   background: ${variables.white};
   border: solid 1px ${variables.normalGray};
@@ -23,6 +23,8 @@ export type InputProps = {
   placeholder: string;
   value: string;
   id: string;
+  type?: string;
+  className?: string;
 };
 
 export const Input: React.FunctionComponent<InputProps> = (
@@ -34,6 +36,8 @@ export const Input: React.FunctionComponent<InputProps> = (
       value={props.value}
       onChange={props.onChange}
       placeholder={props.placeholder}
+      type={props.type}
+      className={props.className}
     />
   );
 };
