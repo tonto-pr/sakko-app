@@ -1,37 +1,28 @@
-import React, { Component } from "react";
+import * as React from "react";
 
-import styled from 'styled-components'
+import { Login } from "./Login";
 
-import variables from '../css/palette.js';
+import styled from "styled-components";
 
-interface TitleProps {
-  message: string
-};
-
-const RootContainer = styled.div`
-  background-color: ${variables.darkGray};
-  height: 100vh;
-  width: 100vw;
-`;
+import variables from "../css/palette";
 
 const Title = styled.div`
+  margin: auto;
   font-size: 3em;
-  text-align: center;
-  line-height: 100vh;
   color: ${variables.lightBeige};
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: bold;
 `;
 
-export default class TitlePage extends Component<TitleProps, {}> {
-  render() {
-    const { message } = this.props;
-    const { message2 } = this.props;
-    return (
-      <RootContainer>
-        <Title>{message}</Title> <br />
-        <Title>{message2}</Title>
-      </RootContainer>
-    );
-  }
-}
+const StyledTitlePage = styled.div`
+  margin: auto;
+`;
+
+export const TitlePage: React.FunctionComponent = () => {
+  return (
+    <StyledTitlePage>
+      <Title>Welcome to sakko.app</Title>
+      <Login />
+    </StyledTitlePage>
+  );
+};
