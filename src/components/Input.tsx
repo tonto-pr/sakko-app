@@ -23,6 +23,7 @@ export type InputProps = {
   placeholder: string;
   value: string;
   id: string;
+  type?: string;
 };
 
 export const Input: React.FunctionComponent<InputProps> = (
@@ -34,6 +35,7 @@ export const Input: React.FunctionComponent<InputProps> = (
       value={props.value}
       onChange={props.onChange}
       placeholder={props.placeholder}
+      type={props.type}
     />
   );
 };

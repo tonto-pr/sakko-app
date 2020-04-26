@@ -54,6 +54,7 @@ export const Login: React.FunctionComponent = () => {
         placeholder="Password"
         value={userLogin.password}
         onChange={handleUserLoginChange}
+        type="password"
       />
       <Button id="login" onClick={handleLoginButtonClick}>
         Login
