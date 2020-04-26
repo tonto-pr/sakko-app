@@ -9,6 +9,7 @@ pipeline {
             steps {
                 script {
                     sh 'yarn install'
+                    sh 'yarn generate'
                     sh 'yarn build'
                 }
             }
