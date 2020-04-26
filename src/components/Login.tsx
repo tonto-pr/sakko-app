@@ -41,6 +41,16 @@ export const Login: React.FunctionComponent = () => {
     });
   }
 
+  function handleSignUpClick(): void {
+    const userSignUpData: types.ShapeOfPlainUser = {
+      ...userLogin,
+      email: "anton@tmc.fi",
+    };
+    apiClient.user.post({
+      body: runtime.client.json(userSignUpData),
+    });
+  }
+
   return (
     <StyledLogin>
       <Input
@@ -58,6 +68,9 @@ export const Login: React.FunctionComponent = () => {
       />
       <Button id="login" onClick={handleLoginButtonClick}>
         Login
+      </Button>
+      <Button id="signup" onClick={handleSignUpClick}>
+        Sign Up
       </Button>
     </StyledLogin>
   );
