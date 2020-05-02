@@ -1,10 +1,9 @@
 import * as React from "react";
 
-import { Login } from "./Login";
-
 import styled from "styled-components";
 
 import variables from "../css/palette";
+import { GlobalContext } from "../app";
 
 const Title = styled.div`
   margin: auto;
@@ -20,9 +19,15 @@ const StyledTitlePage = styled.div`
 
 export const TitlePage: React.FunctionComponent = () => {
   return (
-    <StyledTitlePage>
-      <Title>Welcome to sakko.app</Title>
-      <Login />
-    </StyledTitlePage>
+    <GlobalContext.Consumer>
+      {(value): React.ReactNode => {
+        console.log(value);
+        return (
+          <StyledTitlePage>
+            <Title>{value.user.username}, welcome to sakko.app!</Title>
+          </StyledTitlePage>
+        );
+      }}
+    </GlobalContext.Consumer>
   );
 };

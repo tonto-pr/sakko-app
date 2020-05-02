@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const dotenv = require("dotenv-webpack");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -46,9 +47,13 @@ module.exports = {
       template: "./src/index.html",
       filename: "index.html",
     }),
+    new dotenv(),
   ],
   devServer: {
     contentBase: "./dist",
     hot: true,
+  },
+  node: {
+    fs: "empty",
   },
 };

@@ -18,7 +18,13 @@ const StyledSignUp = styled.div`
   text-align: center;
 `;
 
-export const SignUp: React.FunctionComponent = () => {
+export type SignUpProps = {
+  onSuccess: (user: types.ShapeOfUser) => void;
+};
+
+export const SignUp: React.FunctionComponent<SignUpProps> = (
+  props: SignUpProps
+) => {
   const [signUpData, setSignUpData] = useState<types.ShapeOfPlainUser>({
     username: "",
     email: "",
@@ -36,10 +42,13 @@ export const SignUp: React.FunctionComponent = () => {
     });
   }
 
-  async function handleSignUpClick(): void {
+  async function handleSignUpClick(): Promise<void> {
     const response = await apiClient.user.post({
       body: runtime.client.json(signUpData),
     });
+    if (response.status === 200) {
+      props.onSuccess(response.value.value as types.ShapeOfUser);
+    } else console.log(response.status);
   }
 
   return (
