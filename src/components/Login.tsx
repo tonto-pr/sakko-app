@@ -20,7 +20,13 @@ const StyledLogin = styled.div`
   text-align: center;
 `;
 
-export const Login: React.FunctionComponent = () => {
+export type LoginProps = {
+  onSuccess: (user: types.ShapeOfUser) => void;
+};
+
+export const Login: React.FunctionComponent<LoginProps> = (
+  props: LoginProps
+) => {
   const [userLogin, setUserLogin] = useState<types.ShapeOfUserLogin>({
     username: "",
     password: "",
@@ -38,10 +44,13 @@ export const Login: React.FunctionComponent = () => {
     });
   }
 
-  function handleLoginButtonClick(): void {
-    apiClient.login.post({
+  async function handleLoginButtonClick(): Promise<void> {
+    const response = await apiClient.login.post({
       body: runtime.client.json(userLogin),
     });
+    if (response.status === 200) {
+      props.onSuccess(response.value.value as types.ShapeOfUser);
+    } else console.log(response.status);
   }
 
   function handleSignUpClick(): void {
@@ -55,7 +64,7 @@ export const Login: React.FunctionComponent = () => {
   return (
     <StyledLogin>
       <Modal show={showModal} onCloseModal={onCloseModalHandler}>
-        <SignUp />
+        <SignUp onSuccess={props.onSuccess} />
       </Modal>
       <Input
         id="username"
