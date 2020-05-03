@@ -1,13 +1,16 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Input } from "./Input";
 import { Button } from "./Button";
-
+import * as Cookies from "js-cookie";
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
 import * as runtime from "@smartlyio/oats-runtime";
 import * as types from "../../generated/common.types.generated";
+import { useHistory } from "react-router-dom";
+import { GlobalContext } from "../app";
+import { loginExpiryTime, domain, defaultPath } from "../constants";
 
 import styled from "styled-components";
 
@@ -18,13 +21,9 @@ const StyledSignUp = styled.div`
   text-align: center;
 `;
 
-export type SignUpProps = {
-  onSuccess: (user: types.ShapeOfUser) => void;
-};
-
-export const SignUp: React.FunctionComponent<SignUpProps> = (
-  props: SignUpProps
-) => {
+export const SignUp: React.FunctionComponent = () => {
+  const context = useContext(GlobalContext);
+  const history = useHistory();
   const [signUpData, setSignUpData] = useState<types.ShapeOfPlainUser>({
     username: "",
     email: "",
@@ -47,7 +46,18 @@ export const SignUp: React.FunctionComponent<SignUpProps> = (
       body: runtime.client.json(signUpData),
     });
     if (response.status === 200) {
-      props.onSuccess(response.value.value as types.ShapeOfUser);
+      const user = response.value.value;
+      Cookies.set("access-token", user.accessToken, {
+        expires: loginExpiryTime,
+        domain: domain,
+        path: defaultPath,
+      });
+      context.setGlobalContext({
+        ...context.globalContext,
+        user,
+        loggedIn: true,
+      });
+      history.push("/home");
     } else console.log(response.status);
   }
 

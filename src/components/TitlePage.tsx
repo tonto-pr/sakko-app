@@ -23,7 +23,9 @@ export const TitlePage: React.FunctionComponent = () => {
       {(value): React.ReactNode => {
         return (
           <StyledTitlePage>
-            <Title>{value.user.username}, welcome to sakko.app!</Title>
+            <Title>
+              {value.globalContext.user.username}, welcome to sakko.app!
+            </Title>
           </StyledTitlePage>
         );
       }}
