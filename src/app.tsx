@@ -33,8 +33,9 @@ export const GlobalContext = React.createContext<GlobalContextProps>({
 });
 
 export const App: React.FunctionComponent = () => {
+  console.log(domain);
   const apiClient = api.client(axiosAdapter.bind);
-
+  console.log("Before globalContext", Cookies.get());
   const [globalContext, setGlobalContext] = useState<GlobalContextProps>({
     user: {
       _id: "",
@@ -52,25 +53,29 @@ export const App: React.FunctionComponent = () => {
           body: runtime.client.json({ accessToken: browserAccessToken }),
         });
         if (response.status === 200) {
-          console.log(response.value.value);
+          console.log("Before loadLogin", Cookies.get());
           setGlobalContext({ ...globalContext, user: response.value.value });
+          console.log("After loadLogin", Cookies.get());
         }
-        console.log(response.status);
       }
     }
     effectHandle();
   }, []);
 
   function handleLoggedIn(user: types.ShapeOfUser): void {
+    console.log("Before handleLoggedIn", Cookies.get());
     Cookies.set("access-token", user.accessToken, {
       expires: loginExpiryTime,
       domain: domain,
     });
+    console.log("After handleLoggedIn", Cookies.get());
     setGlobalContext({ ...globalContext, user, loggedIn: true });
   }
 
   function handleLogOut(): void {
+    console.log("Before handleLogOut", Cookies.get());
     Cookies.remove("access-token");
+    console.log("After handleLogOut", Cookies.get());
     setGlobalContext({
       ...globalContext,
       user: {

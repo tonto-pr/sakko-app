@@ -21,7 +21,6 @@ export const TitlePage: React.FunctionComponent = () => {
   return (
     <GlobalContext.Consumer>
       {(value): React.ReactNode => {
-        console.log(value);
         return (
           <StyledTitlePage>
             <Title>{value.user.username}, welcome to sakko.app!</Title>
