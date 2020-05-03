@@ -1,10 +1,12 @@
 import * as React from "react";
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import * as Cookies from "js-cookie";
 import { Input } from "./Input";
 import { Button } from "./Button";
 import { Modal } from "./Modal";
 import { SignUp } from "./SignUp";
+import { GlobalContext } from "../app";
+import { loginExpiryTime, domain, defaultPath } from "../constants";
 
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
@@ -12,6 +14,7 @@ import * as runtime from "@smartlyio/oats-runtime";
 import * as types from "../../generated/common.types.generated";
 
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 const StyledLogin = styled.div`
   width: 400px;
@@ -20,13 +23,9 @@ const StyledLogin = styled.div`
   text-align: center;
 `;
 
-export type LoginProps = {
-  onSuccess: (user: types.ShapeOfUser) => void;
-};
-
-export const Login: React.FunctionComponent<LoginProps> = (
-  props: LoginProps
-) => {
+export const Login: React.FunctionComponent = () => {
+  const context = useContext(GlobalContext);
+  const history = useHistory();
   const [userLogin, setUserLogin] = useState<types.ShapeOfUserLogin>({
     username: "",
     password: "",
@@ -44,12 +43,23 @@ export const Login: React.FunctionComponent<LoginProps> = (
     });
   }
 
-  async function handleLoginButtonClick(): Promise<void> {
+  async function handleLogin(): Promise<void> {
     const response = await apiClient.login.post({
       body: runtime.client.json(userLogin),
     });
     if (response.status === 200) {
-      props.onSuccess(response.value.value as types.ShapeOfUser);
+      const user = response.value.value;
+      Cookies.set("access-token", user.accessToken, {
+        expires: loginExpiryTime,
+        domain: domain,
+        path: defaultPath,
+      });
+      context.setGlobalContext({
+        ...context.globalContext,
+        user,
+        loggedIn: true,
+      });
+      history.push("/home");
     } else console.log(response.status);
   }
 
@@ -64,7 +74,7 @@ export const Login: React.FunctionComponent<LoginProps> = (
   return (
     <StyledLogin>
       <Modal show={showModal} onCloseModal={onCloseModalHandler}>
-        <SignUp onSuccess={props.onSuccess} />
+        <SignUp />
       </Modal>
       <Input
         id="username"
@@ -79,9 +89,10 @@ export const Login: React.FunctionComponent<LoginProps> = (
         onChange={handleUserLoginChange}
         type="password"
       />
-      <Button id="login" onClick={handleLoginButtonClick}>
-        Login
+      <Button id="login" onClick={handleLogin}>
+        Log In
       </Button>
+
       <Button id="signup" onClick={handleSignUpClick}>
         Sign Up
       </Button>
