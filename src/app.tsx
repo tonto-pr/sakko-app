@@ -6,7 +6,7 @@ import { Login } from "./components/Login";
 import { Button } from "./components/Button";
 import styled from "styled-components";
 import * as Cookies from "js-cookie";
-import { loginExpiryTime, domain } from "./constants";
+import { loginExpiryTime, domain, defaultPath } from "./constants";
 import * as types from "../generated/common.types.generated";
 import * as api from "../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
@@ -67,6 +67,7 @@ export const App: React.FunctionComponent = () => {
     Cookies.set("access-token", user.accessToken, {
       expires: loginExpiryTime,
       domain: domain,
+      path: defaultPath,
     });
     console.log("After handleLoggedIn", Cookies.get());
     setGlobalContext({ ...globalContext, user, loggedIn: true });
@@ -74,7 +75,10 @@ export const App: React.FunctionComponent = () => {
 
   function handleLogOut(): void {
     console.log("Before handleLogOut", Cookies.get());
-    Cookies.remove("access-token");
+    Cookies.remove("access-token", {
+      domain: domain,
+      path: defaultPath,
+    });
     console.log("After handleLogOut", Cookies.get());
     setGlobalContext({
       ...globalContext,
