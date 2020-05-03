@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { TitlePage } from "./components/TitlePage";
 import { Login } from "./components/Login";
 import { Button } from "./components/Button";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 import styled from "styled-components";
 import * as Cookies from "js-cookie";
 import { loginExpiryTime, domain, defaultPath } from "./constants";
@@ -86,9 +87,23 @@ export const App: React.FunctionComponent = () => {
   return (
     <GlobalContext.Provider value={globalContext}>
       <RootContainer>
-        <Button onClick={handleLogOut} id="logout">
-          Log out
-        </Button>
+        <NavigationBar id="navbar">
+          {globalContext.loggedIn && (
+            <Button onClick={handleLogOut} id="logout">
+              Log Out
+            </Button>
+          )}
+          {globalContext.loggedIn && (
+            <Button
+              onClick={(): void => {
+                console.log("Profile");
+              }}
+              id="logout"
+            >
+              Profile
+            </Button>
+          )}
+        </NavigationBar>
         {globalContext.loggedIn ? (
           <TitlePage />
         ) : (

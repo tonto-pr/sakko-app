@@ -2,6 +2,7 @@ import * as React from "react";
 
 import styled from "styled-components";
 import { Button } from "./Button";
+import variables from "../css/palette";
 const ModalWrapper = styled.div`
   padding: 30px;
   position: fixed;
@@ -9,7 +10,7 @@ const ModalWrapper = styled.div`
   width: 25%;
   left: 37.5%;
   top: 30%;
-  background-color: white;
+  background-color: ${variables.white};
   border: solid 1px black;
   z-index: 10000;
   transform: translateX(-30px);

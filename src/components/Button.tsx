@@ -10,9 +10,9 @@ const StyledButton = styled.button`
   border-radius: 10px;
   font-size: 1em;
   color: ${variables.darkGray};
-
-  :focus {
-    background-color: ${variables.lightBeige};
+  border: solid 1px ${variables.darkGray};
+  :active {
+    border: solid 3px ${variables.lightOrange};
   }
 `;
 
