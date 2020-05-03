@@ -14,7 +14,14 @@ const StyledInput = styled.input`
   font-size: 1.5em;
   border-radius: 10px;
   :focus {
-    background-color: ${variables.lightBeige};
+    background-color: ${variables.greenGray};
+    color: ${variables.white};
+    ::placeholder {
+      color: ${variables.white};
+    }
+  }
+  ::placeholder {
+    color: ${variables.darkGray};
   }
 `;
 

@@ -8,7 +8,7 @@ import { GlobalContext } from "../app";
 const Title = styled.div`
   margin: auto;
   font-size: 3em;
-  color: ${variables.lightBeige};
+  color: ${variables.darkGray};
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
 `;
