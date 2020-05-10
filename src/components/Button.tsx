@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import variables from "../css/palette";
+import { useHistory } from "react-router-dom";
 
 const StyledButton = styled.button`
   outline: none;
@@ -17,8 +18,9 @@ const StyledButton = styled.button`
 `;
 
 export type ButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
   id: string;
+  link?: string;
   className?: string;
   children: React.ReactNode;
 };
@@ -26,11 +28,18 @@ export type ButtonProps = {
 export const Button: React.FunctionComponent<ButtonProps> = (
   props: ButtonProps
 ) => {
+  const history = useHistory();
+
+  function onClickWithRedirect(): void {
+    if (props.link) history.push(props.link);
+    if (props.onClick) props.onClick();
+  }
+
   return (
     <StyledButton
       className={props.className}
       id={props.id}
-      onClick={props.onClick}
+      onClick={onClickWithRedirect}
     >
       {props.children}
     </StyledButton>
