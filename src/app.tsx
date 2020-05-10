@@ -94,19 +94,17 @@ export const App: React.FunctionComponent = () => {
         <RootContainer>
           <NavigationBar id="navbar">
             {globalContext.loggedIn && (
-              <Button onClick={handleLogOut} id="logout">
-                Log Out
-              </Button>
-            )}
-            {globalContext.loggedIn && (
-              <Button
-                onClick={(): void => {
-                  console.log("Profile");
-                }}
-                id="logout"
-              >
-                Profile
-              </Button>
+              <>
+                <Button link="/home" id="home">
+                  Home
+                </Button>
+                <Button onClick={handleLogOut} link="/" id="logout">
+                  Log Out
+                </Button>
+                <Button link="/profile" id="profile">
+                  Profile
+                </Button>
+              </>
             )}
           </NavigationBar>
           <Switch>
