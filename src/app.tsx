@@ -62,7 +62,7 @@ export const App: React.FunctionComponent = () => {
       const browserAccessToken = Cookies.get("access-token");
       if (browserAccessToken) {
         const response = await apiClient.login.post({
-          body: runtime.client.json({ accessToken: browserAccessToken }),
+          body: runtime.client.json({ access_token: browserAccessToken }),
         });
         if (response.status === 200) {
           setGlobalContext({ ...globalContext, user: response.value.value });

@@ -49,7 +49,7 @@ export const Login: React.FunctionComponent = () => {
     });
     if (response.status === 200) {
       const user = response.value.value;
-      Cookies.set("access-token", user.accessToken, {
+      Cookies.set("access-token", user.access_token, {
         expires: loginExpiryTime,
         domain: domain,
         path: defaultPath,
