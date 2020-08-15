@@ -24,7 +24,7 @@ const StyledSignUp = styled.div`
 export const SignUp: React.FunctionComponent = () => {
   const context = useContext(GlobalContext);
   const history = useHistory();
-  const [signUpData, setSignUpData] = useState<types.ShapeOfPlainUser>({
+  const [signUpData, setSignUpData] = useState<types.ShapeOfUser>({
     username: "",
     email: "",
     password: "",
@@ -47,7 +47,7 @@ export const SignUp: React.FunctionComponent = () => {
     });
     if (response.status === 200) {
       const user = response.value.value;
-      Cookies.set("access-token", user.accessToken, {
+      Cookies.set("access-token", user.access_token, {
         expires: loginExpiryTime,
         domain: domain,
         path: defaultPath,
