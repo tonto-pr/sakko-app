@@ -5,10 +5,10 @@ info:
   version: "0.1"
   contact:
     name: "Leivalle API"
-    url: "https://api.antonraut.io"
+    url: "https://api.sakko.app"
     email: "anton.rautio@gmail.com"
 servers:
-  - url: "https://api.antonraut.io"
+  - url: "https://api.sakko.app"
     description: "Production API"
 paths:
   /fine:
