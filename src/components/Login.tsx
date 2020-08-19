@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useState, useContext } from "react";
 import * as Cookies from "js-cookie";
-import { Input } from "./Input";
-import { Button } from "./Button";
-import { Modal } from "./Modal";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { SignUp } from "./SignUp";
 import { GlobalContext } from "../app";
 import { loginExpiryTime, domain, defaultPath } from "../constants";
@@ -39,15 +40,17 @@ export const Login: React.FunctionComponent = () => {
   ): void {
     setUserLogin({
       ...userLogin,
-      [event.target.id]: event.target.value,
+      [event.target.placeholder]: event.target.value,
     });
   }
 
   async function handleLogin(): Promise<void> {
+    console.log(userLogin);
     const response = await apiClient.login.post({
       body: runtime.client.json(userLogin),
     });
     if (response.status === 200) {
+      console.log(response.value);
       const user = response.value.value;
       Cookies.set("access-token", user.access_token, {
         expires: loginExpiryTime,
@@ -73,29 +76,25 @@ export const Login: React.FunctionComponent = () => {
 
   return (
     <StyledLogin>
-      <Modal show={showModal} onCloseModal={onCloseModalHandler}>
-        <SignUp />
+      <Modal centered show={showModal} onHide={onCloseModalHandler}>
+        <Modal.Body>
+          <SignUp />
+        </Modal.Body>
       </Modal>
-      <Input
-        id="username"
-        placeholder="Username"
-        value={userLogin.username}
-        onChange={handleUserLoginChange}
-      />
-      <Input
-        id="password"
-        placeholder="Password"
-        value={userLogin.password}
-        onChange={handleUserLoginChange}
-        type="password"
-      />
-      <Button id="login" onClick={handleLogin}>
-        Log In
-      </Button>
-
-      <Button id="signup" onClick={handleSignUpClick}>
-        Sign Up
-      </Button>
+      <InputGroup>
+        <FormControl placeholder="username" onChange={handleUserLoginChange} />
+        <FormControl
+          placeholder="password"
+          onChange={handleUserLoginChange}
+          type="password"
+        />
+        <Button id="login" onClick={handleLogin}>
+          Log In
+        </Button>
+        <Button id="signup" onClick={handleSignUpClick}>
+          Sign Up
+        </Button>
+      </InputGroup>
     </StyledLogin>
   );
 };

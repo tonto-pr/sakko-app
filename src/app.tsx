@@ -1,8 +1,10 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-
-import { Button } from "./components/Button";
-import NavigationBar from "./components/NavigationBar/NavigationBar";
+import { Redirect } from "react-router";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useHistory } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 import styled from "styled-components";
 import * as Cookies from "js-cookie";
 import { domain, defaultPath } from "./constants";
@@ -72,7 +74,7 @@ export const App: React.FunctionComponent = () => {
     effectHandle();
   }, []);
 
-  function handleLogOut(): void {
+  function handleLogOut(): () => void {
     Cookies.remove("access-token", {
       domain: domain,
       path: defaultPath,
@@ -91,22 +93,22 @@ export const App: React.FunctionComponent = () => {
   return (
     <Router>
       <GlobalContext.Provider value={context}>
-        <RootContainer>
-          <NavigationBar id="navbar">
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand>Sakko App</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse>
             {globalContext.loggedIn && (
               <>
-                <Button link="/home" id="home">
-                  Home
-                </Button>
-                <Button onClick={handleLogOut} link="/" id="logout">
+                <Nav.Link href="/home">Home</Nav.Link>
+                <Nav.Link href="/" onClick={handleLogOut}>
                   Log Out
-                </Button>
-                <Button link="/profile" id="profile">
-                  Profile
-                </Button>
+                </Nav.Link>
+                <Nav.Link href="/profile">Profile</Nav.Link>
               </>
             )}
-          </NavigationBar>
+          </Navbar.Collapse>
+        </Navbar>
+        <RootContainer>
           <Switch>
             {globalContext.loggedIn ? <LoggedInRoute /> : <LoggedOutRoute />}
           </Switch>
