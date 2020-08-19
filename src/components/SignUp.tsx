@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useState, useContext } from "react";
 
-import { Input } from "./Input";
-import { Button } from "./Button";
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
 import * as Cookies from "js-cookie";
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
@@ -11,15 +12,6 @@ import * as types from "../../generated/common.types.generated";
 import { useHistory } from "react-router-dom";
 import { GlobalContext } from "../app";
 import { loginExpiryTime, domain, defaultPath } from "../constants";
-
-import styled from "styled-components";
-
-const StyledSignUp = styled.div`
-  width: 400px;
-  padding: 0.5em;
-  margin: auto;
-  text-align: center;
-`;
 
 export const SignUp: React.FunctionComponent = () => {
   const context = useContext(GlobalContext);
@@ -37,7 +29,7 @@ export const SignUp: React.FunctionComponent = () => {
   ): void {
     setSignUpData({
       ...signUpData,
-      [event.target.id]: event.target.value,
+      [event.target.placeholder]: event.target.value,
     });
   }
 
@@ -62,30 +54,19 @@ export const SignUp: React.FunctionComponent = () => {
   }
 
   return (
-    <StyledSignUp>
-      <Input
-        id="username"
-        placeholder="Username"
-        value={signUpData.username}
-        onChange={handleUserLoginChange}
-      />
-      <Input
-        id="password"
-        placeholder="Password"
-        value={signUpData.password}
+    <InputGroup>
+      <FormControl placeholder="username" onChange={handleUserLoginChange} />
+      <FormControl
+        placeholder="password"
         onChange={handleUserLoginChange}
         type="password"
       />
-      <Input
-        id="email"
-        placeholder="Email"
-        value={signUpData.email}
+      <FormControl
+        placeholder="email"
         onChange={handleUserLoginChange}
         type="email"
       />
-      <Button id="signupmodalbutton" onClick={handleSignUpClick}>
-        Sign Up
-      </Button>
-    </StyledSignUp>
+      <Button onClick={handleSignUpClick}>Sign Up</Button>
+    </InputGroup>
   );
 };
