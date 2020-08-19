@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Redirect } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useHistory } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import styled from "styled-components";
@@ -19,8 +17,6 @@ import LoggedOutRoute from "./routes/LoggedOutRoute";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 
 const RootContainer = styled.div`
-  height: 100vh;
-  width: 100vw;
   display: flex;
 `;
 
@@ -74,7 +70,7 @@ export const App: React.FunctionComponent = () => {
     effectHandle();
   }, []);
 
-  function handleLogOut(): () => void {
+  function handleLogOut(): void {
     Cookies.remove("access-token", {
       domain: domain,
       path: defaultPath,
