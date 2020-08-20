@@ -6,7 +6,7 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { SignUp } from "./SignUp";
-import { GlobalContext } from "../app";
+import { GlobalContext } from "../lib/useGlobalContext";
 import { loginExpiryTime, domain, defaultPath } from "../constants";
 
 import * as api from "../../generated/client.generated";

@@ -10,7 +10,7 @@ import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
 import * as runtime from "@smartlyio/oats-runtime";
 import * as types from "../../generated/common.types.generated";
 import { useHistory } from "react-router-dom";
-import { GlobalContext } from "../app";
+import { GlobalContext } from "../lib/useGlobalContext";
 import { loginExpiryTime, domain, defaultPath } from "../constants";
 
 export const SignUp: React.FunctionComponent = () => {

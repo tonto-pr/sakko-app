@@ -8,3 +8,4 @@ coverage
 generated
 # don't link webpack.config
 webpack.config.js
+*.js

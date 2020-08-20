@@ -3,8 +3,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { GlobalContext } from "../../app";
-import { useState, useContext, useEffect } from "react";
+import { GlobalContext } from "../../lib/useGlobalContext";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 
 import * as api from "../../../generated/client.generated";
@@ -48,19 +48,6 @@ const ProfilePage: React.FunctionComponent = () => {
       value: context.globalContext.user.email,
     },
   });
-
-  useEffect(() => {
-    setUserFields({
-      username: {
-        edit: false,
-        value: context.globalContext.user.username,
-      },
-      email: {
-        edit: false,
-        value: context.globalContext.user.email,
-      },
-    });
-  }, [context.globalContext.user]);
 
   function handleCheckboxChange({
     target: { id },
@@ -114,6 +101,16 @@ const ProfilePage: React.FunctionComponent = () => {
           context.setGlobalContext({
             ...context.globalContext,
             user: response.value.value,
+          });
+          setUserFields({
+            username: {
+              edit: false,
+              value: response.value.value.username,
+            },
+            email: {
+              edit: false,
+              value: response.value.value.email,
+            },
           });
         }
       });

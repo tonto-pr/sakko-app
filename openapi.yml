@@ -5,10 +5,10 @@ info:
   version: "0.1"
   contact:
     name: "Leivalle API"
-    url: "https://api.sakko.app"
+    url: "https://www.leivalle.org"
     email: "anton.rautio@gmail.com"
 servers:
-  - url: "https://api.sakko.app"
+  - url: "http://localhost:3000"
     description: "Production API"
 paths:
   /fine:
@@ -399,6 +399,30 @@ paths:
                   $ref: "#/components/schemas/User"
         404:
           $ref: "#/components/responses/NotFound"
+  /user_group/users/add:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserGroupUsers"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserGroupUsers"
+        403:
+          $ref: "#/components/responses/AlreadyExists"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/BadRequest"
   /login:
     post:
       requestBody:

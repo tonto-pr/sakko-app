@@ -5,6 +5,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { TitlePage } from "../components/TitlePage";
 import ErrorPage from "../components/ErrorPage";
 import ProfilePage from "../components/ProfilePage/ProfilePage";
+import UserGroupPage from "../components/UserGroupPage";
 
 const LoggedInRoute: React.FunctionComponent = () => {
   return (
@@ -17,6 +18,9 @@ const LoggedInRoute: React.FunctionComponent = () => {
       </Route>
       <Route exact path="/profile">
         <ProfilePage />
+      </Route>
+      <Route exact path="/usergroups">
+        <UserGroupPage />
       </Route>
       <Route exact path="/">
         <Redirect to="/home" />
