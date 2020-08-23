@@ -11,5 +11,6 @@ module.exports = {
   ],
   rules: {
     "react/jsx-uses-vars": "error",
+    "@typescript-eslint/camelcase": "off",
   },
 };

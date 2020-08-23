@@ -3,8 +3,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 import variables from "../css/palette";
-import { GlobalContext } from "../app";
-
+import { GlobalContext } from "../lib/useGlobalContext";
 const Title = styled.div`
   margin: auto;
   font-size: 3em;
