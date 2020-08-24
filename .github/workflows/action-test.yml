@@ -24,6 +24,8 @@ jobs:
           aws-region: eu-central-1
       - name: yarn install
         run: yarn install
+      - name: yarn lint
+        run: yarn lint
       - name: generate files
         run: yarn generate
       - name: Build app
