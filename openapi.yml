@@ -177,6 +177,26 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/BadRequest"
+  /user/search:
+    get:
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/BadRequest"
   /user/{user_id}:
     get:
       tags:
