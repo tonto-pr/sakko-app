@@ -13,10 +13,9 @@ const useFetch = (
 } => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const doFetch = async (): Promise<void> => {
-      setLoading(true);
       try {
         const res = await callback();
         const json = await res.value.value;
