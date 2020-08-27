@@ -6,8 +6,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
-
+import UserSearchInput from "./UserSearchInput";
 import useAsyncState from "../lib/useAsyncState";
 
 import * as api from "../../generated/client.generated";
@@ -26,7 +25,7 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
   const apiClient = api.client(axiosAdapter.bind);
 
   const [showAddUsersModal, setShowAddUsersModal] = useState<boolean>(false);
-  const [addUsersModalValue, setaddUsersModalValue] = useState<string>("");
+  const [toAddUsers, setToAddUsers] = useState<types.ShapeOfUser[]>([]);
   const [userGroupUsers, setUserGroupUsers, loading] = useAsyncState(
     apiClient.user_group(props.userGroup.user_group_id.toString()).users.get
   ) as [
@@ -35,40 +34,12 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
     boolean,
     object
   ];
-  const openAddUsersModal = (): void => setShowAddUsersModal(true);
-  const closeAddUsersModal = (): void => setShowAddUsersModal(false);
 
-  const [searchUsers, setSearchUsers] = useState<types.ShapeOfUser[]>([]);
-  const [toAddUsers, setToAddUsers] = useState<types.ShapeOfUser[]>([]);
-
-  const handleAddUsersModalValueChange = ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }): void => {
-    setaddUsersModalValue(value);
-    apiClient.user.search
-      .get({ query: { query: value } })
-      .then((response) => {
-        if (response.status === 200) {
-          setSearchUsers([...response.value.value] as types.ShapeOfUser[]);
-        } else if (response.status === 404) {
-          setSearchUsers([]);
-        }
-      })
-      .catch((err) => {
-        setSearchUsers([]);
-      });
+  const openAddUsersModal = (): void => {
+    setToAddUsers([]);
+    setShowAddUsersModal(true);
   };
-
-  function renderUserGroupUsers(
-    userGroupUsers: types.ShapeOfUser[]
-  ): React.ReactElement[] {
-    console.log("userGroupUsers", userGroupUsers);
-    return userGroupUsers.map((user) => (
-      <div key={user.user_id}>{user.username}</div>
-    ));
-  }
+  const closeAddUsersModal = (): void => setShowAddUsersModal(false);
 
   function handleAddUserClick(): void {
     const addUsersPayload = toAddUsers.map((user) => {
@@ -100,21 +71,17 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
       })
       .finally(() => {
         closeAddUsersModal();
-        setaddUsersModalValue("");
       });
   }
 
-  const handleSearchUserClick = ({
-    target: { id },
-  }: {
-    target: { id: string };
-  }): void => {
-    const toAddSearchUser = searchUsers.filter(
-      (user) => user.user_id.toString() === id
-    );
-    console.log("toAddSearchUser", toAddSearchUser);
-    setToAddUsers([...toAddUsers, ...toAddSearchUser] as types.ShapeOfUser[]);
-    console.log("toAddUsers", toAddUsers);
+  const handleUserSearchResultClick = (user: types.ShapeOfUser): void => {
+    setToAddUsers([...toAddUsers, user] as types.ShapeOfUser[]);
+  };
+
+  const noExistingUserGroupUsers = (user: types.ShapeOfUser): boolean => {
+    return !userGroupUsers.some((userGroupUser) => {
+      return userGroupUser.user_id === user.user_id;
+    });
   };
 
   return (
@@ -126,29 +93,10 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Dropdown>
-            <FormControl
-              autoFocus
-              className="mx-3 my-2 w-auto"
-              placeholder="User ID"
-              onChange={handleAddUsersModalValueChange}
-              value={addUsersModalValue}
-            />
-            <ul
-              className="list-unstyled"
-              style={{ overflow: "scroll", maxHeight: "100px" }}
-            >
-              {searchUsers.map((user) => (
-                <Dropdown.Item
-                  key={user.user_id}
-                  id={user.user_id}
-                  onClick={handleSearchUserClick}
-                >
-                  {user.username}
-                </Dropdown.Item>
-              ))}
-            </ul>
-          </Dropdown>
+          <UserSearchInput
+            userFilter={noExistingUserGroupUsers}
+            onSearchResultClick={handleUserSearchResultClick}
+          />
         </Modal.Body>
         <Modal.Footer>
           <ul
@@ -156,7 +104,7 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
             style={{ overflow: "scroll", maxHeight: "100px" }}
           >
             {toAddUsers.map((user) => {
-              return <li key={`toAdd${user.user_id}`}>{user.username}</li>;
+              return <li key={user.user_id}>{user.username}</li>;
             })}
           </ul>
           <Button variant="secondary" onClick={closeAddUsersModal}>
@@ -171,7 +119,10 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
         <ListGroup horizontal>
           <ListGroup.Item>{props.userGroup.user_group_name}</ListGroup.Item>
           <ListGroup.Item>
-            {!loading && renderUserGroupUsers(userGroupUsers)}
+            {!loading &&
+              userGroupUsers.map((user) => (
+                <div key={user.user_id}>{user.username}</div>
+              ))}
           </ListGroup.Item>
           <ListGroup.Item>
             <Dropdown>
