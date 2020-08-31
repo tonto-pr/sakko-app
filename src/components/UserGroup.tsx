@@ -25,7 +25,11 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
   const apiClient = api.client(axiosAdapter.bind);
 
   const [showAddUsersModal, setShowAddUsersModal] = useState<boolean>(false);
+  const [showDeleteUsersModal, setShowDeleteUsersModal] = useState<boolean>(
+    false
+  );
   const [toAddUsers, setToAddUsers] = useState<types.ShapeOfUser[]>([]);
+  const [toDeleteUsers, setToDeleteUsers] = useState<types.ShapeOfUser[]>([]);
   const [userGroupUsers, setUserGroupUsers, loading] = useAsyncState(
     apiClient.user_group(props.userGroup.user_group_id.toString()).users.get
   ) as [
@@ -40,6 +44,12 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
     setShowAddUsersModal(true);
   };
   const closeAddUsersModal = (): void => setShowAddUsersModal(false);
+
+  const openDeleteUsersModal = (): void => {
+    setToDeleteUsers([]);
+    setShowDeleteUsersModal(true);
+  };
+  const closeDeleteUsersModal = (): void => setShowDeleteUsersModal(false);
 
   function handleAddUserClick(): void {
     const addUsersPayload = toAddUsers.map((user) => {
@@ -74,12 +84,61 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
       });
   }
 
+  function handleDeleteUserClick(): void {
+    const deleteUsersPayload = toDeleteUsers.map((user) => {
+      return {
+        user_group_id: props.userGroup.user_group_id,
+        user_id: user.user_id,
+      };
+    });
+    apiClient.user_group.users.delete
+      .post({
+        body: runtime.client.json(deleteUsersPayload),
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          Promise.all(
+            response.value.value.map(async (user) => {
+              const userResponse = await apiClient
+                .user(user.user_id.toString())
+                .get();
+              if (userResponse.status === 200) {
+                return userResponse.value.value;
+              }
+              return undefined;
+            })
+          ).then((response) => {
+            const newUserGroupUsers = userGroupUsers.filter((userGroupUser) => {
+              return !response.some((toDeleteUser) => {
+                return userGroupUser.user_id === toDeleteUser.user_id;
+              });
+            });
+
+            setUserGroupUsers(newUserGroupUsers);
+          });
+        }
+      })
+      .finally(() => {
+        closeDeleteUsersModal();
+      });
+  }
+
   const handleUserSearchResultClick = (user: types.ShapeOfUser): void => {
     setToAddUsers([...toAddUsers, user] as types.ShapeOfUser[]);
   };
 
+  const handleUserSearchResultClickDelete = (user: types.ShapeOfUser): void => {
+    setToDeleteUsers([...toDeleteUsers, user] as types.ShapeOfUser[]);
+  };
+
   const noExistingUserGroupUsers = (user: types.ShapeOfUser): boolean => {
     return !userGroupUsers.some((userGroupUser) => {
+      return userGroupUser.user_id === user.user_id;
+    });
+  };
+
+  const onlyUserGroupUsers = (user: types.ShapeOfUser): boolean => {
+    return userGroupUsers.some((userGroupUser) => {
       return userGroupUser.user_id === user.user_id;
     });
   };
@@ -115,6 +174,35 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal show={showDeleteUsersModal} onHide={closeDeleteUsersModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Delete users from {props.userGroup.user_group_name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <UserSearchInput
+            userFilter={onlyUserGroupUsers}
+            onSearchResultClick={handleUserSearchResultClickDelete}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <ul
+            className="list-unstyled"
+            style={{ overflow: "scroll", maxHeight: "100px" }}
+          >
+            {toDeleteUsers.map((user) => {
+              return <li key={user.user_id}>{user.username}</li>;
+            })}
+          </ul>
+          <Button variant="secondary" onClick={closeDeleteUsersModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleDeleteUserClick}>
+            DeleteUser
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {props.minified ? (
         <ListGroup horizontal>
           <ListGroup.Item>{props.userGroup.user_group_name}</ListGroup.Item>
@@ -132,6 +220,9 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
               <Dropdown.Menu>
                 <Dropdown.Item onClick={openAddUsersModal}>
                   Add users
+                </Dropdown.Item>
+                <Dropdown.Item onClick={openDeleteUsersModal}>
+                  Delete users
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
