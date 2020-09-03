@@ -11,9 +11,12 @@ import { GlobalContext } from "./lib/useGlobalContext";
 import LoggedInRoute from "./routes/LoggedInRoute";
 import LoggedOutRoute from "./routes/LoggedOutRoute";
 
+import { useState } from "react";
 import { BrowserRouter as Router, Switch, Link } from "react-router-dom";
 import useGlobalContext from "./lib/useGlobalContext";
+import Button from "react-bootstrap/Button";
 
+import FineModal from "./components/FineModal";
 const RootContainer = styled.div`
   display: flex;
 `;
@@ -24,6 +27,8 @@ export const App: React.FunctionComponent = () => {
     setGlobalContext,
     globalContextLoading,
   ] = useGlobalContext();
+
+  const [showFineModal, setShowFineModal] = useState<boolean>(false);
 
   function handleLogOut(): void {
     Cookies.remove("access-token", {
@@ -40,11 +45,15 @@ export const App: React.FunctionComponent = () => {
     });
   }
 
+  const openFineModal = (): void => setShowFineModal(true);
+  const closeFineModal = (): void => setShowFineModal(false);
+
   return (
     <Router>
       <GlobalContext.Provider value={{ globalContext, setGlobalContext }}>
         {!globalContextLoading && (
           <>
+            <FineModal onHide={closeFineModal} show={showFineModal} />
             <Navbar bg="light">
               <Navbar.Brand>Sakko App</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -64,6 +73,9 @@ export const App: React.FunctionComponent = () => {
                     </Nav.Link>
                     <Nav.Link>
                       <Link to="/usergroups">User Groups</Link>
+                    </Nav.Link>
+                    <Nav.Link>
+                      <Button onClick={openFineModal}>Give Fine</Button>
                     </Nav.Link>
                   </>
                 )}
