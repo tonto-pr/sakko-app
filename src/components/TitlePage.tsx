@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import styled from "styled-components";
-
+import Feed from "./Feed";
 import variables from "../css/palette";
 import { GlobalContext } from "../lib/useGlobalContext";
 const Title = styled.div`
@@ -25,6 +25,7 @@ export const TitlePage: React.FunctionComponent = () => {
             <Title>
               {value.globalContext.user.username}, welcome to sakko.app!
             </Title>
+            <Feed />
           </StyledTitlePage>
         );
       }}

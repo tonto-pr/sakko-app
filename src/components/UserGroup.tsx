@@ -64,19 +64,10 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
       })
       .then((response) => {
         if (response.status === 200) {
-          Promise.all(
-            response.value.value.map(async (user) => {
-              const userResponse = await apiClient
-                .user(user.user_id.toString())
-                .get();
-              if (userResponse.status === 200) {
-                return userResponse.value.value;
-              }
-              return undefined;
-            })
-          ).then((response) => {
-            setUserGroupUsers([...userGroupUsers, ...response]);
-          });
+          const addedUsers = response.value.value.map(
+            (userGroupUser) => userGroupUser.user
+          );
+          setUserGroupUsers([...userGroupUsers, ...addedUsers]);
         }
       })
       .finally(() => {
@@ -97,25 +88,17 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
       })
       .then((response) => {
         if (response.status === 200) {
-          Promise.all(
-            response.value.value.map(async (user) => {
-              const userResponse = await apiClient
-                .user(user.user_id.toString())
-                .get();
-              if (userResponse.status === 200) {
-                return userResponse.value.value;
-              }
-              return undefined;
-            })
-          ).then((response) => {
-            const newUserGroupUsers = userGroupUsers.filter((userGroupUser) => {
-              return !response.some((toDeleteUser) => {
-                return userGroupUser.user_id === toDeleteUser.user_id;
-              });
-            });
+          const deletedUsers = response.value.value.map(
+            (userGroupUser) => userGroupUser.user
+          );
 
-            setUserGroupUsers(newUserGroupUsers);
+          const newUserGroupUsers = userGroupUsers.filter((userGroupUser) => {
+            return !deletedUsers.some((toDeleteUser) => {
+              return userGroupUser.user_id === toDeleteUser.user_id;
+            });
           });
+
+          setUserGroupUsers(newUserGroupUsers);
         }
       })
       .finally(() => {
