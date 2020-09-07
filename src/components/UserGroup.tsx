@@ -6,13 +6,14 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import UserSearchInput from "./UserSearchInput";
+
 import useAsyncState from "../lib/useAsyncState";
 
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
 import * as runtime from "@smartlyio/oats-runtime";
 import * as types from "../../generated/common.types.generated";
+import AssetSearchInput from "./AssetSearchInput";
 
 type UserGroupProps = {
   userGroup: types.ShapeOfUserGroup;
@@ -135,9 +136,10 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UserSearchInput
-            userFilter={noExistingUserGroupUsers}
-            onSearchResultClick={handleUserSearchResultClick}
+          <AssetSearchInput
+            type="user"
+            assetFilter={noExistingUserGroupUsers}
+            onChange={handleUserSearchResultClick}
           />
         </Modal.Body>
         <Modal.Footer>
@@ -164,9 +166,10 @@ const UserGroup: React.FunctionComponent<UserGroupProps> = (
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <UserSearchInput
-            userFilter={onlyUserGroupUsers}
-            onSearchResultClick={handleUserSearchResultClickDelete}
+          <AssetSearchInput
+            type="user"
+            assetFilter={onlyUserGroupUsers}
+            onChange={handleUserSearchResultClickDelete}
           />
         </Modal.Body>
         <Modal.Footer>

@@ -7,13 +7,14 @@ import FineSearchInput from "./FineSearchInput";
 import UserGroupSearchInput from "./UserGroupSearchInput";
 
 type AssetSearchInputProps = {
-  onSearchResultClick: (
+  onChange: (
     asset: types.ShapeOfUser | types.ShapeOfFine | types.ShapeOfUserGroup
   ) => void;
   assetFilter?: (
     asset: types.ShapeOfUser | types.ShapeOfFine | types.ShapeOfUserGroup
   ) => boolean;
   type: string;
+  placeholder?: string;
 };
 
 const AssetSearchInput: React.FunctionComponent<AssetSearchInputProps> = (
@@ -23,22 +24,25 @@ const AssetSearchInput: React.FunctionComponent<AssetSearchInputProps> = (
     case "user":
       return (
         <UserSearchInput
-          onSearchResultClick={props.onSearchResultClick}
+          onChange={props.onChange}
           userFilter={props.assetFilter}
+          placeholder={props.placeholder}
         />
       );
     case "fine":
       return (
         <FineSearchInput
-          onSearchResultClick={props.onSearchResultClick}
+          onChange={props.onChange}
           fineFilter={props.assetFilter}
+          placeholder={props.placeholder}
         />
       );
     case "usergroup":
       return (
         <UserGroupSearchInput
-          onSearchResultClick={props.onSearchResultClick}
+          onChange={props.onChange}
           userGroupFilter={props.assetFilter}
+          placeholder={props.placeholder}
         />
       );
   }

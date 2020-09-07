@@ -45,12 +45,10 @@ export const Login: React.FunctionComponent = () => {
   }
 
   async function handleLogin(): Promise<void> {
-    console.log(userLogin);
     const response = await apiClient.login.post({
       body: runtime.client.json(userLogin),
     });
     if (response.status === 200) {
-      console.log(response.value);
       const user = response.value.value;
       Cookies.set("access-token", user.access_token, {
         expires: loginExpiryTime,
