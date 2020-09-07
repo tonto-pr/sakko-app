@@ -1,84 +1,54 @@
 import * as React from "react";
 
-import { useState } from "react";
+import AsyncSelect from "react-select/async";
 
-import FormControl from "react-bootstrap/FormControl";
-import Dropdown from "react-bootstrap/Dropdown";
 import * as types from "../../generated/common.types.generated";
-
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
 
 type FineSearchInputProps = {
-  onSearchResultClick: (fine: types.ShapeOfFine) => void;
+  onChange: (fine: types.ShapeOfFine) => void;
   fineFilter?: (fine: types.ShapeOfFine) => boolean;
+  placeholder?: string;
 };
+
+type FineOptions = { value: types.ShapeOfFine; label: string };
 
 const FineSearchInput: React.FunctionComponent<FineSearchInputProps> = (
   props: FineSearchInputProps
 ) => {
   const apiClient = api.client(axiosAdapter.bind);
 
-  const [fineSearchInputValue, setFineSearchInputValue] = useState<string>("");
-  const [searchFines, setSearchFines] = useState<types.ShapeOfFine[]>([]);
-
-  const handleValueChange = ({
-    target: { value },
-  }: {
-    target: { value: string };
-  }): void => {
-    setFineSearchInputValue(value);
-    apiClient.fine.search.get({ query: { query: value } }).then((response) => {
-      if (response.status === 200) {
-        let eligibleFines = response.value.value;
-        if (props.fineFilter) {
-          eligibleFines = eligibleFines.filter(props.fineFilter);
+  const fineOptions = async (inputValue: string): Promise<FineOptions[]> => {
+    return apiClient.fine.search
+      .get({ query: { query: inputValue } })
+      .then((response) => {
+        if (response.status === 200) {
+          let fines = response.value.value;
+          if (props.fineFilter) {
+            fines = fines.filter(props.fineFilter);
+          }
+          return fines.map((fine) => {
+            return {
+              value: fine,
+              label: fine.description,
+            };
+          });
         }
-
-        setSearchFines([...eligibleFines] as types.ShapeOfFine[]);
-      } else {
-        setSearchFines([]);
-      }
-    });
+      });
   };
 
-  const handleSearchFineClick = ({
-    target: { id },
-  }: {
-    target: { id: string };
-  }): void => {
-    const clickedFine = searchFines.filter(
-      (fine) => fine.fine_id.toString() === id
-    )[0];
-
-    props.onSearchResultClick(clickedFine);
-  };
+  const handleOnChange = (selectedOptions: FineOptions): void =>
+    props.onChange(selectedOptions.value);
 
   return (
-    <Dropdown>
-      <FormControl
-        autoFocus
-        className="mx-3 my-2 w-auto"
-        placeholder="Fine description"
-        onChange={handleValueChange}
-        onFocus={handleValueChange}
-        value={fineSearchInputValue}
-      />
-      <ul
-        className="list-unstyled"
-        style={{ overflow: "scroll", maxHeight: "100px" }}
-      >
-        {searchFines.map((fine) => (
-          <Dropdown.Item
-            key={fine.fine_id}
-            id={fine.fine_id}
-            onClick={handleSearchFineClick}
-          >
-            {fine.description}
-          </Dropdown.Item>
-        ))}
-      </ul>
-    </Dropdown>
+    <AsyncSelect
+      placeholder={props.placeholder}
+      cacheOptions
+      defaultOptions
+      loadOptions={fineOptions}
+      onChange={handleOnChange}
+    />
   );
 };
 

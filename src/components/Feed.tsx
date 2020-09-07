@@ -19,7 +19,7 @@ const Feed: React.FunctionComponent = () => {
     apiClient.user(context.globalContext.user.user_id.toString()).feed.get
   ) as [
     types.ShapeOfGivenFineWithProps[],
-    React.Dispatch<React.SetStateAction<types.ShapeOfUser[]>>,
+    React.Dispatch<React.SetStateAction<types.ShapeOfGivenFineWithProps[]>>,
     boolean,
     object
   ];

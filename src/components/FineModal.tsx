@@ -7,7 +7,9 @@ import * as types from "../../generated/common.types.generated";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { useState, useContext } from "react";
 
 import { GlobalContext } from "../lib/useGlobalContext";
@@ -58,22 +60,44 @@ const FineModal: React.FunctionComponent<FineModalProps> = (
     setFine(undefined);
   };
 
+  const userFilter = (user: types.ShapeOfUser): boolean => {
+    return context.globalContext.user.user_id !== user.user_id;
+  };
+
   return (
     <Modal centered show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>Give Fine</Modal.Header>
       <Modal.Body>
-        <AssetSearchInput
-          type="user"
-          onSearchResultClick={handleUserSearchResultClick}
-        />
-        <AssetSearchInput
-          type="usergroup"
-          onSearchResultClick={handleUserGroupSearchResultClick}
-        />
-        <AssetSearchInput
-          type="fine"
-          onSearchResultClick={handleFineSearchResultClick}
-        />
+        <Container>
+          <Row>
+            <Col>
+              <AssetSearchInput
+                type="usergroup"
+                onChange={handleUserGroupSearchResultClick}
+                placeholder="Select User Group"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <AssetSearchInput
+                type="user"
+                onChange={handleUserSearchResultClick}
+                placeholder="Select User"
+                assetFilter={userFilter}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <AssetSearchInput
+                type="fine"
+                onChange={handleFineSearchResultClick}
+                placeholder="Select Existing Fine"
+              />
+            </Col>
+          </Row>
+        </Container>
         <Button onClick={handleGiveFineClick}>Give fine!</Button>
         {receiverUser && receiverUser.username}{" "}
         {userGroup && userGroup.user_group_name} {fine && fine.description}
