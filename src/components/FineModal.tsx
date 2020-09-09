@@ -14,7 +14,9 @@ import { useState, useContext } from "react";
 
 import { GlobalContext } from "../lib/useGlobalContext";
 
-import AssetSearchInput from "./AssetSearchInput";
+import UserSearchInput from "./UserSearchInput";
+import FineSearchInput from "./FineSearchInput";
+import UserGroupSearchInput from "./UserGroupSearchInput";
 type FineModalProps = {
   show: boolean;
   onHide: () => void;
@@ -60,10 +62,6 @@ const FineModal: React.FunctionComponent<FineModalProps> = (
     setFine(undefined);
   };
 
-  const userFilter = (user: types.ShapeOfUser): boolean => {
-    return context.globalContext.user.user_id !== user.user_id;
-  };
-
   return (
     <Modal centered show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>Give Fine</Modal.Header>
@@ -71,8 +69,7 @@ const FineModal: React.FunctionComponent<FineModalProps> = (
         <Container>
           <Row>
             <Col>
-              <AssetSearchInput
-                type="usergroup"
+              <UserGroupSearchInput
                 onChange={handleUserGroupSearchResultClick}
                 placeholder="Select User Group"
               />
@@ -80,20 +77,21 @@ const FineModal: React.FunctionComponent<FineModalProps> = (
           </Row>
           <Row>
             <Col>
-              <AssetSearchInput
-                type="user"
+              <UserSearchInput
                 onChange={handleUserSearchResultClick}
                 placeholder="Select User"
-                assetFilter={userFilter}
+                userGroup={userGroup}
+                isDisabled={!userGroup}
               />
             </Col>
           </Row>
           <Row>
             <Col>
-              <AssetSearchInput
-                type="fine"
+              <FineSearchInput
                 onChange={handleFineSearchResultClick}
-                placeholder="Select Existing Fine"
+                placeholder="Reason for fine"
+                userGroup={userGroup}
+                isDisabled={!userGroup}
               />
             </Col>
           </Row>
