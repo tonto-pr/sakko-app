@@ -28,7 +28,8 @@ const Feed: React.FunctionComponent = () => {
     return feed.map((givenFine) => {
       return (
         <tr key={givenFine.given_fine_id}>
-          <td>{givenFine.fine.fine_id}</td>
+          <td>{givenFine.created_at}</td>
+          <td>{givenFine.given_fine_id}</td>
           <td>{givenFine.receiver_user.username}</td>
           <td>{givenFine.giver_user.username}</td>
           <td>{givenFine.fine.amount}</td>
@@ -43,6 +44,7 @@ const Feed: React.FunctionComponent = () => {
     <Table>
       <thead>
         <tr>
+          <th>Given at</th>
           <th>Fine id</th>
           <th>Receiver user</th>
           <th>Giver user</th>
