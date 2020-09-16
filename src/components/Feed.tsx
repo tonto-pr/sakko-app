@@ -3,9 +3,11 @@ import * as React from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../lib/useGlobalContext";
 
+import * as moment from "moment";
+
 import useAsyncState from "../lib/useAsyncState";
 
-import Table from "react-bootstrap/Table";
+import GivenFine from "./GivenFine";
 
 import * as api from "../../generated/client.generated";
 import * as axiosAdapter from "@smartlyio/oats-axios-adapter";
@@ -16,7 +18,13 @@ const Feed: React.FunctionComponent = () => {
   const context = useContext(GlobalContext);
 
   const [feed, , loading] = useAsyncState(
-    apiClient.user(context.globalContext.user.user_id.toString()).feed.get
+    apiClient.user(context.globalContext.user.user_id.toString()).feed.get,
+    {
+      query: {
+        fromUnixTime: moment().subtract(7, "d").unix().toString(),
+        toUnixTime: moment().unix().toString(),
+      },
+    }
   ) as [
     types.ShapeOfGivenFineWithProps[],
     React.Dispatch<React.SetStateAction<types.ShapeOfGivenFineWithProps[]>>,
@@ -25,37 +33,18 @@ const Feed: React.FunctionComponent = () => {
   ];
 
   function renderFineRows(): React.ReactElement[] {
-    return feed.map((givenFine) => {
-      return (
-        <tr key={givenFine.given_fine_id}>
-          <td>{givenFine.created_at}</td>
-          <td>{givenFine.given_fine_id}</td>
-          <td>{givenFine.receiver_user.username}</td>
-          <td>{givenFine.giver_user.username}</td>
-          <td>{givenFine.fine.amount}</td>
-          <td>{givenFine.fine.description}</td>
-          <td>{givenFine.user_group.user_group_name}</td>
-        </tr>
-      );
-    });
+    return feed
+      .sort((thisFine, nextFine) => {
+        return nextFine.created_at - thisFine.created_at;
+      })
+      .map((givenFine) => {
+        return (
+          <GivenFine key={givenFine.given_fine_id} givenFine={givenFine} />
+        );
+      });
   }
 
-  return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Given at</th>
-          <th>Fine id</th>
-          <th>Receiver user</th>
-          <th>Giver user</th>
-          <th>Fine amount</th>
-          <th>Fine description</th>
-          <th>User Group</th>
-        </tr>
-      </thead>
-      <tbody>{!loading && renderFineRows()}</tbody>
-    </Table>
-  );
+  return <>{!loading && renderFineRows()}</>;
 };
 
 export default Feed;

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 
 const useFetch = (
-  callback: () => Promise<{
+  callback: (
+    queryParams?: object
+  ) => Promise<{
     value: {
       value: object;
     };
-  }>
+  }>,
+  queryParams?: object
 ): {
   response: object;
   error: object;
@@ -17,7 +20,13 @@ const useFetch = (
   useEffect(() => {
     const doFetch = async (): Promise<void> => {
       try {
-        const res = await callback();
+        let res;
+        if (queryParams) {
+          res = await callback(queryParams);
+        } else {
+          res = await callback();
+        }
+
         const json = await res.value.value;
         setResponse(json);
       } catch (e) {
