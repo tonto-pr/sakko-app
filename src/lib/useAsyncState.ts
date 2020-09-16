@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import useFetch from "./useFetch";
 
 const useAsyncState = (
-  callback: () => Promise<{ value: { value: object } }>
+  callback: (query: object) => Promise<{ value: { value: object } }>,
+  queryParams?: object
 ): [
   object,
   React.Dispatch<React.SetStateAction<object | object[]>>,
   boolean,
   object
 ] => {
-  const { response, loading, error } = useFetch(callback);
+  const { response, loading, error } = useFetch(callback, queryParams);
   const [asyncState, setAsyncState] = useState<object>(undefined);
   useEffect(() => {
     if (response) {
