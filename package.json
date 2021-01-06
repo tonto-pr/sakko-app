@@ -34,7 +34,7 @@
     "@types/react-select": "^3.0.19",
     "@types/styled-components": "^5.1.0",
     "@types/webpack-env": "^1.15.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-loader": "^8.1.0",
     "bootstrap": "^4.5.2",
     "css-loader": "^3.4.2",
